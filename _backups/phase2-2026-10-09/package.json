@@ -1,0 +1,11 @@
+{
+  "name": "lunara-shop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lunara Shop storefront prototype",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "node -e \"console.log('Lunara static storefront: no build step required')\""
+  }
+}

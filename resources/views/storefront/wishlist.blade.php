@@ -1,0 +1,4 @@
+@extends('layouts.app')
+@section('content')
+<main class="container cart-page"><div class="breadcrumb"><a href="{{ route('home') }}">Home</a>@include('components.icon',['name'=>'chevron-right'])<span>Wishlist</span></div><div class="section-head"><h1 class="section-title">Your Wishlist</h1><span class="results-count">{{ $products->count() }} saved</span></div>@if($products->isEmpty())<div class="empty-state"><div>@include('components.icon',['name'=>'heart'])</div><h2>Save what inspires you</h2><p>Tap the heart on any piece to keep it close.</p><a class="btn" href="{{ route('shop') }}">Explore the Collection @include('components.icon',['name'=>'arrow'])</a></div>@else<div class="product-grid">@foreach($products as $product) @include('components.product-card',['product'=>$product]) @endforeach</div>@endif</main>
+@endsection

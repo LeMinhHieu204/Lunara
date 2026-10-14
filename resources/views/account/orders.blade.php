@@ -1,0 +1,4 @@
+@extends('layouts.app')
+@section('content')
+<main class="container cart-page"><div class="breadcrumb"><a href="{{ route('account') }}">Account</a>@include('components.icon',['name'=>'chevron-right'])<span>Orders</span></div><div class="cart-table">@forelse($orders as $order)<a href="{{ route('account.orders.show',$order) }}" class="cart-row" style="grid-template-columns:1fr auto auto"><div><h3>{{ $order->order_number }}</h3><p>{{ $order->created_at->format('M j, Y') }} · {{ ucfirst($order->status) }}</p></div><span>{{ $order->items->sum('quantity') }} items</span><strong>${{ number_format($order->total,2) }}</strong></a>@empty<div class="empty-state"><h2>No orders yet</h2><a class="btn" href="{{ route('shop') }}">Shop Now</a></div>@endforelse</div><div class="pagination">{{ $orders->links('pagination.lunara') }}</div></main>
+@endsection

@@ -1,0 +1,4 @@
+@extends('layouts.app')
+@section('content')
+<main class="container cart-page"><div class="empty-state" style="max-width:460px;margin:auto;text-align:left"><h2>Create your account</h2><p>Save favorites, check out faster and keep up with your orders.</p><form method="post" action="{{ route('register.store') }}" style="display:grid;gap:12px">@csrf<input name="name" placeholder="Full name" required value="{{ old('name') }}"><input name="email" type="email" placeholder="Email address" required value="{{ old('email') }}"><input name="password" type="password" placeholder="Password" required><input name="password_confirmation" type="password" placeholder="Confirm password" required><button class="btn" type="submit">Create Account</button></form><p style="margin-top:18px">Already have an account? <a class="text-link" href="{{ route('login') }}">Sign in</a></p></div></main>
+@endsection

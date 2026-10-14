@@ -1,0 +1,4 @@
+@extends('layouts.app')
+@section('content')
+<main class="container cart-page"><div class="breadcrumb"><a href="{{ route('home') }}">Home</a>@include('components.icon',['name'=>'chevron-right'])<span>Account</span></div><div class="section-head"><h1 class="section-title">Hello, {{ auth()->user()->name }}</h1><form method="post" action="{{ route('logout') }}">@csrf<button class="btn btn--ghost">Sign out</button></form></div><div class="cart-table">@forelse($orders as $order)<div class="cart-row" style="grid-template-columns:1fr auto auto"><div><h3>{{ $order->order_number }}</h3><p>{{ $order->created_at->format('M j, Y') }} · {{ ucfirst($order->status) }}</p></div><span>{{ $order->items->sum('quantity') }} items</span><strong>${{ number_format($order->total,2) }}</strong></div>@empty<div class="empty-state"><h2>No orders yet</h2><p>Your next considered piece is waiting.</p><a class="btn" href="{{ route('shop') }}">Shop Now</a></div>@endforelse</div></main>
+@endsection

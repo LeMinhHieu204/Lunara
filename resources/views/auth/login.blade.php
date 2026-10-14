@@ -1,0 +1,4 @@
+@extends('layouts.app')
+@section('content')
+<main class="container cart-page"><div class="empty-state" style="max-width:460px;margin:auto;text-align:left"><h2>Welcome back</h2><p>Sign in to keep your wishlist and order history together.</p><form method="post" action="{{ route('login.store') }}" style="display:grid;gap:12px">@csrf<input name="email" type="email" placeholder="Email address" required value="{{ old('email') }}"><input name="password" type="password" placeholder="Password" required><label class="check-row"><input type="checkbox" name="remember">Remember me</label><button class="btn" type="submit">Sign In</button></form><p style="margin-top:18px"><a class="text-link" href="{{ route('password.request') }}">Forgot password?</a></p><p>New to Lunara? <a class="text-link" href="{{ route('register') }}">Create an account</a></p></div></main>
+@endsection

@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Product extends Model
+{
+    use HasFactory;
+    protected $fillable = ['category_id', 'brand_id', 'name', 'slug', 'sku', 'description', 'price', 'compare_at_price', 'material', 'status', 'featured', 'new_arrival', 'on_sale', 'rating', 'review_count', 'seo_title', 'seo_description'];
+    protected function casts(): array { return ['price' => 'decimal:2', 'compare_at_price' => 'decimal:2', 'rating' => 'decimal:1', 'featured' => 'boolean', 'new_arrival' => 'boolean', 'on_sale' => 'boolean']; }
+    public function category() { return $this->belongsTo(Category::class); }
+    public function brand() { return $this->belongsTo(Brand::class); }
+    public function images() { return $this->hasMany(ProductImage::class)->orderBy('sort_order'); }
+    public function variants() { return $this->hasMany(ProductVariant::class); }
+    public function reviews() { return $this->hasMany(Review::class); }
+    public function collections() { return $this->belongsToMany(Collection::class); }
+    public function getImageUrlAttribute(): string { return $this->images->firstWhere('is_primary', true)?->image_url ?? $this->images->first()?->image_url ?? '/assets/lunara/hero-rack.png'; }
+}

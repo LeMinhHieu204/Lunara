@@ -1,0 +1,90 @@
+@extends('layouts.app')
+
+@section('content')
+<section class="about-hero">
+    <div class="container page-hero__inner">
+        <div class="breadcrumb">
+            <a href="{{ route('home') }}">Home</a>
+            @include('components.icon', ['name' => 'chevron-right'])
+            <span>About Us</span>
+        </div>
+        <div class="about-hero__copy">
+            <p class="eyebrow">THE LUNARA STORY</p>
+            <h1>About Lunara</h1>
+            <p>At Lunara, we believe that simplicity is the ultimate sophistication. Our collections are thoughtfully curated to bring you timeless pieces that elevate your everyday life.</p>
+            <a class="btn" href="{{ route('shop') }}">Our Collection @include('components.icon', ['name' => 'arrow'])</a>
+        </div>
+    </div>
+</section>
+
+<main>
+    <section class="container mission">
+        <h2>Our Mission</h2>
+        <p>We're here to help you feel confident and comfortable in what you wear.<br>Every piece is designed with quality, crafted with care, and chosen to last.</p>
+        <div class="values">
+            <div class="value">@include('components.icon', ['name' => 'leaf'])<strong>Timeless Design</strong><p>Elegant, minimal pieces that never go out of style.</p></div>
+            <div class="value">@include('components.icon', ['name' => 'spark'])<strong>Quality First</strong><p>We use high-quality materials for lasting comfort.</p></div>
+            <div class="value">@include('components.icon', ['name' => 'heart'])<strong>Made for You</strong><p>Designed to fit your lifestyle and make you feel your best.</p></div>
+            <div class="value">@include('components.icon', ['name' => 'globe'])<strong>Sustainable Choice</strong><p>We're committed to ethical and sustainable practices.</p></div>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="story">
+            <div class="story__image" role="img" aria-label="Lunara neutral clothing collection"></div>
+            <div class="story__copy">
+                <p class="eyebrow">Our Story</p>
+                <h2>Simplicity That Inspires</h2>
+                <p>Lunara was born from a love for minimalist fashion and a desire to create pieces that make everyday moments feel special.</p>
+                <p>From the fabrics we choose to the details we design, everything we do is guided by our passion for quality, simplicity, and you.</p>
+                <a class="btn" href="{{ route('shop') }}">Learn More @include('components.icon', ['name' => 'arrow'])</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="container why">
+        <h2>Why Shop With Us</h2>
+        @include('components.benefits', ['compact' => true])
+    </section>
+
+    <section class="container team-section">
+        <div class="team-section__inner">
+            <h2>Meet The Team</h2>
+            <div class="team-grid">
+                @foreach([
+                    ['Emma Johnson', 'Founder & CEO', '/assets/lunara/emma-johnson.png'],
+                    ['Sophia Lee', 'Head of Design', '/assets/lunara/sophia-lee.png'],
+                    ['Liam Carter', 'Operations Manager', '/assets/lunara/liam-carter.png'],
+                    ['Olivia Martin', 'Customer Experience', '/assets/lunara/olivia-martin.png'],
+                ] as [$name, $role, $image])
+                    <article class="team-card">
+                        <img src="{{ $image }}" alt="{{ $name }}" loading="lazy">
+                        <div class="team-card__copy">
+                            <strong>{{ $name }}</strong>
+                            <span>{{ $role }}</span>
+                            <div class="team-socials" aria-label="{{ $name }} social links">
+                                <a href="#" aria-label="Facebook">f</a><a href="#" aria-label="Instagram">◎</a><a href="#" aria-label="LinkedIn">in</a>
+                            </div>
+                        </div>
+                    </article>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="newsletter">
+            <div class="newsletter__icon">@include('components.icon', ['name' => 'mail'])</div>
+            <div class="newsletter__copy">
+                <h2>Stay in the Loop</h2>
+                <p>Sign up and get 10% off your first order.<br>Plus, be the first to know about new arrivals and exclusive offers.</p>
+            </div>
+            <form class="newsletter__form" method="post" action="{{ route('newsletter.store') }}">
+                @csrf
+                <input type="email" name="email" placeholder="Enter your email" required>
+                <button class="btn" type="submit">Subscribe</button>
+            </form>
+        </div>
+    </section>
+</main>
+@endsection
