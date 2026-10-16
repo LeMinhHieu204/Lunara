@@ -68,7 +68,7 @@ class AdminResourceController extends Controller
     public function orders(Request $request) { return $this->resource('Orders', 'orders', Order::with('user')->when($request->filled('status'), fn ($q) => $q->where('status', $request->string('status')))->latest()->paginate(20)->withQueryString()); }
     public function updateOrder(Request $request, Order $order)
     {
-        $data = $request->validate(['status' => ['required', 'in:pending,processing,shipped,completed,cancelled'], 'payment_status' => ['required', 'in:pending,paid,failed,refunded']]);
+        $data = $request->validate(['status' => ['required', 'in:pending,processing,shipped,completed,cancelled'], 'payment_status' => ['required', 'in:pending,paid,failed,refunded,partially_refunded']]);
         if ($data['status'] === 'cancelled' && $order->status !== 'cancelled') $this->releaseReservedStock($order);
         $order->update($data); $order->histories()->create(['user_id' => $request->user()->id, 'status' => $data['status'], 'note' => 'Updated from Admin']); $this->audit('order.updated', $order, $data);
         return back()->with('success', 'Order updated.');

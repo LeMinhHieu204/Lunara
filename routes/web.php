@@ -61,7 +61,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
-    Route::post('/checkout/cancel/{order}', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
+    Route::match(['get', 'post'], '/checkout/cancel/{order}', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
 });
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {

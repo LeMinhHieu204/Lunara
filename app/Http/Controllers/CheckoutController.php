@@ -7,12 +7,13 @@ use App\Models\Payment;
 use App\Models\Coupon;
 use App\Models\CouponRedemption;
 use App\Services\CartService;
+use App\Services\PaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
 {
-    public function __construct(private readonly CartService $cart) {}
+    public function __construct(private readonly CartService $cart, private readonly PaymentService $payments) {}
     public function create(Request $request) { return view('storefront.checkout', ['cart' => $this->cart->current($request)]); }
     public function store(Request $request)
     {
@@ -37,13 +38,29 @@ class CheckoutController extends Controller
             $cart->update(['status' => 'converted']);
             return $order;
         });
-        return redirect()->route('checkout.success', $order)->with('success', 'Your order was created and is awaiting payment confirmation.');
+        try {
+            $checkoutUrl = $this->payments->start($order);
+        } catch (\Throwable $error) {
+            $this->payments->failOrder($order);
+            throw $error;
+        }
+
+        return str_starts_with($checkoutUrl, 'http')
+            ? redirect()->away($checkoutUrl)
+            : redirect()->to($checkoutUrl)->with('success', 'Your order was created and is awaiting payment confirmation.');
     }
-    public function success(Order $order) { return view('storefront.checkout-success', compact('order')); }
+    public function success(Request $request, Order $order)
+    {
+        abort_unless($request->user()->isAdmin() || $order->user_id === $request->user()->id, 403);
+        return view('storefront.checkout-success', compact('order'));
+    }
     public function cancel(Request $request, Order $order)
     {
         abort_unless($request->user()->isAdmin() || $order->user_id === $request->user()->id, 403);
-        if (! in_array($order->status, ['cancelled', 'completed'], true)) { foreach ($order->items as $item) { $inventory = $item->variant?->inventory; if ($inventory) $inventory->decrement('stock_reserved', min($item->quantity, $inventory->stock_reserved)); } $order->update(['status' => 'cancelled', 'payment_status' => $order->payment_status === 'paid' ? 'refunded' : $order->payment_status]); }
+        if (! in_array($order->status, ['cancelled', 'completed'], true)) {
+            abort_if($order->payment_status === 'paid', 409, 'Paid orders require a verified refund process.');
+            $this->payments->failOrder($order);
+        }
         return redirect()->route('account.orders.show', $order)->with('success', 'Order cancelled.');
     }
 }

@@ -108,7 +108,7 @@ Cart, checkout, and admin routes are implemented and covered by source/tests, bu
 ### Storefront experience
 
 - Homepage with local editorial imagery, category entry points, new arrivals, promotional banners, benefits, and newsletter/social sections.
-- Published product catalogue with category routes, keyword search, sale and new-arrival routes, sorting, and pagination.
+- Published product catalogue with category routes, validated keyword/price/variant/stock/sale filters, new-arrival routes, sorting, and pagination. Filtered catalog remains preview-scoped and backed by the local database.
 - Product detail pages with primary imagery, related products, variants, availability, pricing, and add-to-cart actions.
 - Blog index and post routes backed by database models.
 - About, contact, FAQ, shipping, returns, size guide, sustainability, privacy, and terms pages.
@@ -148,7 +148,7 @@ The /admin area is protected by authentication and the admin middleware. The imp
 
 The following points are not presented as complete features:
 
-- Payment provider integration is partial. Orders create pending payment records, and the Stripe-style webhook endpoint verifies and records signed events. Provider checkout/session creation, payment-state transitions, and refunds still require implementation and credentials.
+- Payment provider integration is implemented behind `PaymentService`: Stripe Checkout sessions are created when credentials exist, signed/idempotent webhook events reconcile payment and order state, and failed/expired payments release reserved stock. Local/testing without Stripe credentials stays an explicit simulation boundary; sandbox and production operations still require environment verification.
 - The catalogue UI currently displays price, color, size, and availability controls, but the server-side catalogue query only wires category, keyword, sale/new-arrival, sort, and pagination parameters. Full faceted filtering remains planned.
 - Email delivery, email verification, and production password-reset transport require deployment configuration.
 - The project has not been declared production-ready or formally security-audited.
@@ -307,7 +307,7 @@ These controls do not replace a deployment security review. Rate limiting, uploa
 - [x] Guest/authenticated cart handling and authenticated order creation.
 - [x] Account area, wishlist, blog, newsletter, and protected admin modules.
 - [x] Responsive Playwright coverage with stored desktop/mobile screenshots.
-- [ ] Complete provider-backed payment checkout, webhook state transitions, and refunds.
+- [x] Implement provider-backed payment checkout, webhook state transitions, reservation release, and refund state handling; verify the provider sandbox before release.
 - [ ] Wire faceted price, color, size, and availability filters to server-side query state.
 - [ ] Configure transactional mail, email verification, and production password resets.
 - [ ] Complete product-owner review for bulk actions, fulfillment tracking, delete workflows, and audit retention.
